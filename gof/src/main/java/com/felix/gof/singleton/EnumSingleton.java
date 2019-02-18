@@ -1,5 +1,8 @@
 package com.felix.gof.singleton;
 
+import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.annotation.JSONField;
+import com.alibaba.fastjson.serializer.SerializeConfig;
 import lombok.Getter;
 
 /**
@@ -10,9 +13,23 @@ import lombok.Getter;
  */
 @Getter
 public enum EnumSingleton {
+
     /**
      * 单例模式
      */
-    SINGLETON;
+    SINGLETON("test");
 
-}
+    private String name;
+
+    @JSONField(serialize = false)
+    private final SerializeConfig config = new SerializeConfig();
+
+    private EnumSingleton(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public String toString() {
+        config.configEnumAsJavaBean(EnumSingleton.class);
+        return JSONObject.toJSONString(this, config);
+    }}
